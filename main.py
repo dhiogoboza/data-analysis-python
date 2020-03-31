@@ -62,6 +62,18 @@ def normalize(df_complete):
     scaled_df = scale_columns(df, df.columns)
     print(df)
 
+def eigen_values_vectors(df):
+    x = df.drop(labels=OUPUT_COLUMN_NAME, axis=1).values
+    y = df[OUPUT_COLUMN_NAME].values
+
+    mean = np.mean(x, axis=0)
+    cov_matrix = np.cov(x - mean, rowvar=False)
+
+    eigen_values, eigen_vectors = np.linalg.eig(cov_matrix)
+    eigen_vectors = eigen_vectors.T
+
+    return eigen_values, eigen_vectors
+
 def main():
     df = pd.read_csv("dataset/1.csv")
     prepare(df)
@@ -81,7 +93,13 @@ def main():
 
     print("\nNormalized:")
     normalize(df)
-    
+
+    eigen_values, eigen_vectors = eigen_values_vectors(df)
+    print("\nEigenvalues:")
+    print(eigen_values)
+
+    print("\nEigenvectors:")
+    print(eigen_vectors)
 
 if __name__ == "__main__":
     main()
